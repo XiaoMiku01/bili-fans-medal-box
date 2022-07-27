@@ -1,5 +1,8 @@
 <h1>bili-fans-medal-box</h1>
-Show your bili-fans-medals in a gihub gist
+Show your bili-fans-medals in a gihub gist  
+
+
+![](https://user-images.githubusercontent.com/54094119/181197811-73e621cf-ddbf-401c-ac5c-bc628dbc995b.png)
 
 ## Setup  
 ### Prep work
