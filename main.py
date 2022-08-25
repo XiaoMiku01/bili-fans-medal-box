@@ -1,5 +1,42 @@
-import os, re
+import os
+import time
 import requests
+import hashlib
+import urllib.parse
+
+
+appkey = '4409e2ce8ffd12b8'
+appsec = '59b43e04ad6965f34319062b478f83dd'
+
+BILI_ACCESS_KEY = os.environ.get('BILI_ACCESS_KEY', '')
+
+
+def appsign(params):
+    params.update({'appkey': appkey})
+    params = dict(sorted(params.items()))  # 重排序参数 key
+    query = urllib.parse.urlencode(params)  # 序列化参数
+    sign = hashlib.md5((query + appsec).encode()).hexdigest()  # 计算 api 签名
+    params.update({'sign': sign})
+    return params
+
+
+def login():
+    url = "https://app.bilibili.com/x/v2/account/mine"
+    params = {
+        "access_key": BILI_ACCESS_KEY,
+        "ts": int(time.time()),
+    }
+    response = requests.get(url, params=appsign(params))
+    print(response.json())
+    return response.json()
+
+
+login_info = login()
+if login_info['code']:
+    print(login_info)
+    raise Exception("login error")
+else:
+    uid = login_info['data']['mid']
 
 
 def get_medal_list():
@@ -7,9 +44,12 @@ def get_medal_list():
         cookie = os.environ.get('BILI_COOKIE', '')
         api = 'https://api.live.bilibili.com/xlive/web-ucenter/user/MedalWall'
         headers = {'cookie': cookie}
-        target_id = re.search(r'DedeUserID=(\d+)', cookie).group(1)
-        params = (('target_id', target_id),)
-        response = requests.get(api, headers=headers, params=params)
+        params = {
+            "access_key": BILI_ACCESS_KEY,
+            "ts": int(time.time()),
+            'target_id': uid,
+        }
+        response = requests.get(api, headers=headers, params=appsign(params))
         print(response.json())
         medal_list = response.json()['data']['list'][:5]
         return medal_list
@@ -119,5 +159,5 @@ def update_gist(gist_id, token):
     requests.patch(url, headers=headers, json=data)
 
 
-update_gist(gist_id=GH_GIST_ID, token=GH_TOKEN)
 print('\n'.join(l2))
+# update_gist(gist_id=GH_GIST_ID, token=GH_TOKEN)
