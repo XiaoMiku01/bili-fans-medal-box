@@ -160,4 +160,4 @@ def update_gist(gist_id, token):
 
 
 print('\n'.join(l2))
-# update_gist(gist_id=GH_GIST_ID, token=GH_TOKEN)
+update_gist(gist_id=GH_GIST_ID, token=GH_TOKEN)
