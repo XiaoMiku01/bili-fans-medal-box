@@ -17,7 +17,7 @@ jobs:
 
             GH_GIST_ID: "${{ secrets.GH_GIST_ID }}"
 
-            BILI_COOKIE: "${{ secrets.BILI_COOKIE }}"
+            BILI_ACCESS_KEY: "${{ secrets.BILI_ACCESS_KEY }}"
 
         steps:
             - uses: actions/checkout@v3
